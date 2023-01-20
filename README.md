@@ -1,4 +1,4 @@
-# test_user_api
+# User API
 membuat User API Sederhana Dengan Express JS dan Authentication dengan JWT
 
 ### Pre-require
