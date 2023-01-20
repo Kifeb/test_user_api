@@ -1,14 +1,14 @@
 {
   "name": "user_api",
   "version": "1.0.0",
-  "description": "",
+  "description": "User API",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "nodemon app.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["user", "API"],
+  "author": "kifebb",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^4.9.0",
