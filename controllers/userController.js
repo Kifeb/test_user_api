@@ -22,9 +22,7 @@ export const GetUsers = async (req, res) => {
 
     } catch (error) {
         return res.status(500).json({msg: error.message})
-    } finally {
-        await prisma.$disconnect()
-     }
+    }
 };
 
 export const GetUserById = async (req, res) => {
@@ -46,25 +44,24 @@ export const GetUserById = async (req, res) => {
 
         return res.status(200).json({
             status: "success",
-            msg: "success get data",
+            msg: "berhasil mengambil data",
             data: user
         })
 
     } catch (error) {
         return res.status(500).json({msg: error.message})
-    } finally {
-        await prisma.$disconnect()
-     }
+    }
 };
 
 export const CreateUser = async (req, res) => {
-     // Ambil payload dari client dengan req.body
+     
+    // Ambil payload dari client dengan req.body
      const {name, email, password, confirmPassword, role} = req.body;
 
      // cek password dan confirm password lalu cocokkan
      if (password !== confirmPassword) return res.status(400).json({msg: "password dan confirm passoword tidak cocok"})
  
-     // Proses Hash Password dengan bcrypt
+    // Proses Hash Password dengan bcrypt
      const salt = bcrypt.genSaltSync(10);
      const hashPassword = bcrypt.hashSync(password, salt);
  
@@ -84,15 +81,19 @@ export const CreateUser = async (req, res) => {
                 role: true
             }
          });
+
+         // kembalikan response dalam bentuk json
          return res.status(201).json({
             status: "success",
-            msg: `success created user with id ${response.id}`,
+            msg: `berhasil membuat user dengan id ${response.id}`,
             data: response
         });
      } catch (error) {
-         return res.status(500).json({msg: error.message})
-     } finally {
-        await prisma.$disconnect()
+        if(error.code === "P2002"){
+            return res.status(400).json({msg: "email sudah terdaftar"})
+        } else {
+            return res.status(500).json({msg: error.message})
+        }
      }
 };
 
@@ -105,14 +106,12 @@ export const DeleteUserById = async (req, res) => {
         });
 
         if (deletedUser.count == 0) {
-            res.status(404).json({ msg: "id not found"});
+            return res.status(404).json({ msg: "id tidak ditemukan"});
         }
 
-        return res.status(200).json({ msg: `User with id ${req.params.id} has been deleted.`, data: deletedUser });
+        return res.status(200).json({ msg: `User dengan id ${req.params.id} sudah dihapus.`, data: deletedUser });
 
     } catch (err) {
-        return res.status(500).json({ msg: err.message});
-    } finally {
-        await prisma.$disconnect()
+        res.status(500).json({ msg: err.message});
     }
 };

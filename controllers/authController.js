@@ -4,37 +4,6 @@ import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
-export const Register = async (req, res) => {
-    // Ambil payload dari client dengan req.body
-    const {name, email, password, confirmPassword, role} = req.body;
-
-    // cek password dan confirm password lalu cocokkan
-    if (password !== confirmPassword) return res.status(400).json({msg: "password dan confirm passoword tidak cocok"})
-
-    // Proses Hash Password dengan bcrypt
-    const salt = bcrypt.genSaltSync(10);
-    const hashPassword = bcrypt.hashSync(password, salt);
-
-    // Proses input ke database
-    try {
-        const response = await prisma.user.create({
-            data: {
-                name,
-                email,
-                password: hashPassword,
-                role
-            }
-        });
-        return res.status(201).json({
-            status: "success",
-            msg: "success created user",
-            data: response.id
-        });
-    } catch (error) {
-        return res.status(500).json({msg: error.message})
-    }
-}
-
 export const Login = async (req, res) => {
     
     try {
