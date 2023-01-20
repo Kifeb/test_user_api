@@ -1,0 +1,18 @@
+version: "3.9"
+# list service
+services:
+  api:
+    # build image berdasarkan Dockerfile
+    build:
+      context: .
+    # port untuk web service
+    ports:
+      - "5000:5000"
+    # setting environment variable mengambil dari file .env
+    environment:
+      - DATABASE_URL
+      - SHADOW_DATABASE_URL
+      - ACCESS_TOKEN
+      - APP_PORT
+    # restart saat terjadi error
+    restart: always
